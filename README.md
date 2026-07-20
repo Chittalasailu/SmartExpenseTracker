@@ -17,7 +17,7 @@ A full-stack expense tracking application that helps users manage their daily ex
 - 📄 Export Expenses to PDF
 - 💻 Responsive User Interface
 
----
+
 
 ## 🛠️ Technologies Used
 
@@ -48,15 +48,23 @@ A full-stack expense tracking application that helps users manage their daily ex
 
 ### Dashboard
 
-(Add dashboard screenshot here)
+
+---<img width="1896" height="867" alt="Dashboard" src="https://github.com/user-attachments/assets/5646efad-eb23-40b6-8e37-97e5554186f0" />
+
 
 ### Expense List
 
-(Add expense list screenshot here)
+
+<img width="1917" height="880" alt="expense-history" src="https://github.com/user-attachments/assets/fc39e117-c57b-40db-84de-6c00fe53d982" />
+
 
 ### Analytics
 
-(Add charts screenshot here)
+<img width="746" height="568" alt="piechart" src="https://github.com/user-attachments/assets/b6e7d82f-fd2a-490a-9b7e-eaaaf6da7f3e" />
+
+### Graph
+<img width="870" height="506" alt="graph" src="https://github.com/user-attachments/assets/a2e07473-74f9-4d8a-9e76-bf2e625a4a68" />
+
 
 ---
 
