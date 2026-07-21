@@ -31,67 +31,75 @@ function ExpenseForm({
     });
   };
 
-  const resetForm = () => {
-    setExpense({
-      title: "",
-      amount: "",
-      category: "",
-      date: "",
-    });
-    setSelectedExpense(null);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const expenseData = {
         title: expense.title,
-        amount: Number(expense.amount),
+        amount: parseFloat(expense.amount),
         category: expense.category,
         date: expense.date,
       };
 
-      console.log("Sending Expense:", expenseData);
+      console.log("Sending:", expenseData);
 
       if (selectedExpense) {
-        const res = await updateExpense(selectedExpense.id, expenseData);
-        console.log("Update Success:", res.data);
+        const response = await updateExpense(selectedExpense.id, expenseData);
+        console.log("Update Response:", response.data);
         alert("Expense updated successfully!");
       } else {
-        const res = await addExpense(expenseData);
-        console.log("Add Success:", res.data);
+        const response = await addExpense(expenseData);
+        console.log("Create Response:", response.data);
         alert("Expense added successfully!");
       }
 
-      resetForm();
+      setExpense({
+        title: "",
+        amount: "",
+        category: "",
+        date: "",
+      });
+
+      setSelectedExpense(null);
       fetchExpenses();
     } catch (error) {
-      console.error("========== AXIOS ERROR ==========");
-      console.error(error);
+      console.log("========== ERROR ==========");
+      console.log(error);
 
       if (error.response) {
         console.log("Status:", error.response.status);
         console.log("Data:", error.response.data);
+        console.log("Headers:", error.response.headers);
 
         alert(
-          `Backend Error (${error.response.status})\n\n${JSON.stringify(
-            error.response.data,
-            null,
-            2
+          `Server Error\n\nStatus: ${error.response.status}\n\n${JSON.stringify(
+            error.response.data
           )}`
         );
       } else if (error.request) {
-        console.log(error.request);
+        console.log("No response received:", error.request);
 
         alert(
           "No response received from backend.\n\nCheck Render backend and CORS."
         );
       } else {
-        console.log(error.message);
+        console.log("Error:", error.message);
+
         alert(error.message);
       }
     }
+  };
+
+  const handleCancel = () => {
+    setExpense({
+      title: "",
+      amount: "",
+      category: "",
+      date: "",
+    });
+
+    setSelectedExpense(null);
   };
 
   return (
@@ -141,7 +149,7 @@ function ExpenseForm({
         {selectedExpense && (
           <button
             type="button"
-            onClick={resetForm}
+            onClick={handleCancel}
             style={{
               marginTop: "10px",
               backgroundColor: "#6b7280",
