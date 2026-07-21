@@ -12,42 +12,55 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Expense Tracker API")
 
+# ==========================
 # CORS Configuration
+# ==========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://smart-expense-tracker-ten-sandy.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# ==========================
 # Home Route
+# ==========================
 @app.get("/")
 def home():
     return {"message": "Smart Expense Tracker API is running!"}
 
 
-# ----------------------------
+# ==========================
 # CREATE EXPENSE
-# ----------------------------
+# ==========================
 @app.post("/expenses", response_model=schemas.Expense)
-def create_expense(expense: schemas.ExpenseCreate, db: Session = Depends(get_db)):
+def create_expense(
+    expense: schemas.ExpenseCreate,
+    db: Session = Depends(get_db)
+):
     return crud.create_expense(db, expense)
 
 
-# ----------------------------
+# ==========================
 # GET ALL EXPENSES
-# ----------------------------
+# ==========================
 @app.get("/expenses", response_model=list[schemas.Expense])
 def read_expenses(db: Session = Depends(get_db)):
     return crud.get_expenses(db)
 
 
-# ----------------------------
+# ==========================
 # GET SINGLE EXPENSE
-# ----------------------------
+# ==========================
 @app.get("/expenses/{expense_id}", response_model=schemas.Expense)
-def read_expense(expense_id: int, db: Session = Depends(get_db)):
+def read_expense(
+    expense_id: int,
+    db: Session = Depends(get_db)
+):
     expense = crud.get_expense(db, expense_id)
 
     if expense is None:
@@ -56,9 +69,9 @@ def read_expense(expense_id: int, db: Session = Depends(get_db)):
     return expense
 
 
-# ----------------------------
+# ==========================
 # UPDATE EXPENSE
-# ----------------------------
+# ==========================
 @app.put("/expenses/{expense_id}", response_model=schemas.Expense)
 def update_expense(
     expense_id: int,
@@ -73,11 +86,14 @@ def update_expense(
     return updated_expense
 
 
-# ----------------------------
+# ==========================
 # DELETE EXPENSE
-# ----------------------------
+# ==========================
 @app.delete("/expenses/{expense_id}")
-def delete_expense(expense_id: int, db: Session = Depends(get_db)):
+def delete_expense(
+    expense_id: int,
+    db: Session = Depends(get_db)
+):
     deleted = crud.delete_expense(db, expense_id)
 
     if deleted is None:
