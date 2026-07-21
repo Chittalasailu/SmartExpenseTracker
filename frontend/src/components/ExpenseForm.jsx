@@ -31,54 +31,67 @@ function ExpenseForm({
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      if (selectedExpense) {
-        await updateExpense(selectedExpense.id, {
-          title: expense.title,
-          amount: parseFloat(expense.amount),
-          category: expense.category,
-          date: expense.date,
-        });
-
-        alert("Expense updated successfully!");
-      } else {
-        await addExpense({
-          title: expense.title,
-          amount: parseFloat(expense.amount),
-          category: expense.category,
-          date: expense.date,
-        });
-
-        alert("Expense added successfully!");
-      }
-
-      setExpense({
-        title: "",
-        amount: "",
-        category: "",
-        date: "",
-      });
-
-      setSelectedExpense(null);
-      fetchExpenses();
-    } catch (error) {
-      console.error(error);
-      alert("Operation failed.");
-    }
-  };
-
-  const handleCancel = () => {
+  const resetForm = () => {
     setExpense({
       title: "",
       amount: "",
       category: "",
       date: "",
     });
-
     setSelectedExpense(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const expenseData = {
+        title: expense.title,
+        amount: Number(expense.amount),
+        category: expense.category,
+        date: expense.date,
+      };
+
+      console.log("Sending Expense:", expenseData);
+
+      if (selectedExpense) {
+        const res = await updateExpense(selectedExpense.id, expenseData);
+        console.log("Update Success:", res.data);
+        alert("Expense updated successfully!");
+      } else {
+        const res = await addExpense(expenseData);
+        console.log("Add Success:", res.data);
+        alert("Expense added successfully!");
+      }
+
+      resetForm();
+      fetchExpenses();
+    } catch (error) {
+      console.error("========== AXIOS ERROR ==========");
+      console.error(error);
+
+      if (error.response) {
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
+
+        alert(
+          `Backend Error (${error.response.status})\n\n${JSON.stringify(
+            error.response.data,
+            null,
+            2
+          )}`
+        );
+      } else if (error.request) {
+        console.log(error.request);
+
+        alert(
+          "No response received from backend.\n\nCheck Render backend and CORS."
+        );
+      } else {
+        console.log(error.message);
+        alert(error.message);
+      }
+    }
   };
 
   return (
@@ -128,7 +141,7 @@ function ExpenseForm({
         {selectedExpense && (
           <button
             type="button"
-            onClick={handleCancel}
+            onClick={resetForm}
             style={{
               marginTop: "10px",
               backgroundColor: "#6b7280",
